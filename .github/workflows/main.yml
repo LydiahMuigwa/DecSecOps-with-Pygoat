@@ -40,7 +40,7 @@ jobs:
     - name: set up docker
       uses: docker-practice/actions-setup-docker@v1
       with: 
-        docker_version: '20.10.30'
+        docker_version: '27.5.0'
 
     - name: Debug Docker status
       run: |
