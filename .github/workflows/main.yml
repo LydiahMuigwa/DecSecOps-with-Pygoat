@@ -41,6 +41,10 @@ jobs:
      uses: docker-practice/actions-setup-docker@v1
      with: 
       docker_version: '27.2.0'
+    
+   - name: create daemon.json
+     run: |
+      echo '{}' | sudo tee /etc/docker/daemon.json  
 
    - name: build docker image
      run: docker build -f Dockerfile -t myapp:latest .
