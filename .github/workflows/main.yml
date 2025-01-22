@@ -5,7 +5,7 @@ on: [push]
 jobs:
  sast_scan:
   name: Run Bandit Scan
-  runs-on: ubuntu-latest
+  runs-on: ubuntu-22.04
 
   steps:
    - name: checkout code
@@ -31,7 +31,7 @@ jobs:
 
  image_scan:
   name: build image and run image scan
-  runs-on: ubuntu-latest
+  runs-on: ubuntu-22.04
 
   steps:
    - name: checkout code
