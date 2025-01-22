@@ -14,55 +14,40 @@ jobs:
    - name: Set up Python
      uses: actions/setup-python@v2
      with: 
-       python-version: 3.8
+      python-version: 3.8
 
    - name: install bandit
      run: pip install bandit
-
    - name: run bandit scan
      run: bandit -ll -ii -r . -f json -o bandit-report.json
+    
 
    - name: upload artifact
      uses: actions/upload-artifact@v4
      if: always()
      with: 
-       name: bandit-findings
-       path: bandit-report.json
+      name: bandit-findings
+      path: bandit-report.json
 
  image_scan:
-  name: Build image and run image scan
+  name: build image and run image scan
   runs-on: ubuntu-latest
 
   steps:
-    - name: checkout code
-      uses: actions/checkout@v2
+   - name: checkout code
+     uses: actions/checkout@v2
 
-    - name: set up docker
-      uses: docker-practice/actions-setup-docker@v1
-      with: 
-        docker_version: '27.5.0'
+   - name: set up docker
+     uses: docker-practice/actions-setup-docker@v1
+     with: 
+      docker_version: '27.5.0'
 
-    - name: Debug Docker status
-      run: |
-        sudo systemctl is-active docker || sudo systemctl start docker
-        sudo systemctl status docker
+   - name: build docker image
+     run: docker build -f Dockerfile -t myapp:latest .
 
-    - name: create daemon.json
-      run: |
-        sudo mkdir -p /etc/docker
-        echo '{}' | sudo tee /etc/docker/daemon.json
-
-    - name: Verify daemon.json exists
-      run: |
-        ls -l /etc/docker/daemon.json
-        cat /etc/docker/daemon.json
-
-    - name: build docker image
-      run: docker build -f Dockerfile -t myapp:latest .
-
-    - name: docker scout scan
-      run: |
-        curl -fsSL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh -o install-scout.sh
-        sh install-scout.sh
-        docker scout quickview
-        docker scout cves
+   - name: docker scout scan
+     run: |
+      curl -fsSL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh -o install-scout.sh
+      sh install-scout.sh
+      docker scout quickview
+      docker scout cves
